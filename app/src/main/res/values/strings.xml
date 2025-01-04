@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Management App</string>
+    <string name="login_password">password</string>
+    <string name="login">Login</string>
+    <string name="project_listen_name">Your Projects</string>
+    <string name="error_Project_details_message">Project not found</string>
+    <string name="retry">Retry</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="user_not_found">User not found</string>
+    <string name="invalid_credentials">Invalid credentials</string>
+    <string name="no_cached_data">No internet connection and no cached data</string>
+    <string name="failed_to_fetch_projects">Failed to fetch projects: %1$s</string>
+    <string name="project_details_not_found">Project details not found</string>
+    <string name="failed_to_fetch_project_details">Failed to fetch project details</string>
+    <string name="failed_to_load_data">Failed to load data. Please try again.</string>
+    <string name="unknown_error">An unknown error occurred</string>
+</resources>
