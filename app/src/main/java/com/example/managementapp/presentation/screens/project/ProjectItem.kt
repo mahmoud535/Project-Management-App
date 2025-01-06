@@ -52,7 +52,7 @@ fun ProjectItem(project: Project, onClick: () -> Unit) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = project.name, style = MaterialTheme.typography.h6,
+                text = project.name?: "No name", style = MaterialTheme.typography.h6,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

@@ -14,4 +14,15 @@
     <string name="failed_to_fetch_project_details">Failed to fetch project details</string>
     <string name="failed_to_load_data">Failed to load data. Please try again.</string>
     <string name="unknown_error">An unknown error occurred</string>
+
+    <string name="bad_request">Bad request. Please check your input.</string>
+    <string name="unauthorized">Unauthorized access. Please log in again.</string>
+    <string name="forbidden">You do not have permission to access this resource.</string>
+    <string name="not_found">The requested resource was not found.</string>
+    <string name="rate_limit_exceeded">You have exceeded the rate limit. Please try again later.</string>
+    <string name="server_error">An internal server error occurred. Please try again later.</string>
+    <string name="something_went_wrong">Something went wrong. Please try again.</string>
+    <string name="request_timed_out">The request timed out. Please check your internet connection and try again.</string>
+    <string name="token_not_found">Token not found</string>
+
 </resources>

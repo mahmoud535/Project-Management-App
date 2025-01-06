@@ -23,37 +23,34 @@ class LoginViewModel @Inject constructor(
             is LoginEvent.UsernameChanged -> {
                 _state.value = _state.value.copy(username = event.username)
             }
+
             is LoginEvent.TokenChanged -> {
                 _state.value = _state.value.copy(token = event.token)
             }
+
             LoginEvent.Login -> {
                 login()
             }
         }
     }
+
     private fun login() {
         viewModelScope.launch {
-            _state.value = _state.value.copy(
-                isLoading = true,
-                error = null
-            )
+            _state.value = _state.value.copy(isLoading = true, error = null)
 
             loginUseCase(_state.value.username, _state.value.token).collect { resource ->
-                when (resource) {
-                    is Resource.Loading -> { }
-                    is Resource.Success -> {
-                        _state.value = _state.value.copy(
-                            isLoading = false,
-                            isLoggedIn = true,
-                            error = null
-                        )
-                    }
-                    is Resource.Error -> {
-                        _state.value = _state.value.copy(
-                            isLoading = false,
-                            error = resource.message
-                        )
-                    }
+                _state.value = when (resource) {
+                    is Resource.Loading -> _state.value.copy(isLoading = true)
+                    is Resource.Success -> _state.value.copy(
+                        isLoading = false,
+                        isLoggedIn = true,
+                        error = null
+                    )
+
+                    is Resource.Error -> _state.value.copy(
+                        isLoading = false,
+                        error = resource.message
+                    )
                 }
             }
         }

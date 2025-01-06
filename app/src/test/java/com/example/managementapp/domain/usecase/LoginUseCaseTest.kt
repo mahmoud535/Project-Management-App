@@ -1,5 +1,7 @@
 package com.example.managementapp.domain.usecase
 
+import com.example.managementapp.data.local.PreferenceManager
+import com.example.managementapp.data.util.ResourceProvider
 import com.example.managementapp.domain.model.User
 import com.example.managementapp.domain.repository.GithubRepository
 import com.example.managementapp.presentation.util.Resource
@@ -17,12 +19,16 @@ import org.junit.Test
 class LoginUseCaseTest {
 
     private lateinit var repository: GithubRepository
+    private lateinit var preferenceManager: PreferenceManager
+    private lateinit var resourceProvider: ResourceProvider
     private lateinit var loginUseCase: LoginUseCase
 
     @Before
     fun setup() {
         repository = mockk()
-        loginUseCase = LoginUseCase(repository)
+        preferenceManager = mockk()
+        resourceProvider = mockk()
+        loginUseCase = LoginUseCase(repository, resourceProvider, preferenceManager)
     }
 
     @Test
@@ -31,15 +37,17 @@ class LoginUseCaseTest {
         val username = "testUser"
         val token = "sample_token"
         val user = User(username = username, token = token)
+
         coEvery { repository.login(username, token) } returns flowOf(Resource.Success(user))
+        coEvery { preferenceManager.saveToken(token) } returns Unit
 
         // Act
         val results = loginUseCase(username, token).toList()
 
         // Assert
         assertTrue(results.isNotEmpty())
-        assertTrue(results[0] is Resource.Success)
-        assertEquals(user, (results[0] as Resource.Success).data)
+        assertTrue(results[1] is Resource.Success)
+        assertEquals(user, (results[1] as Resource.Success).data)
     }
 
     @Test
@@ -54,8 +62,8 @@ class LoginUseCaseTest {
 
         // Assert
         assertTrue(results.isNotEmpty())
-        org.junit.Assert.assertTrue(results[0] is Resource.Error)
-        assertEquals("Invalid credentials", (results[0] as Resource.Error).message)
+        org.junit.Assert.assertTrue(results[1] is Resource.Error)
+        assertEquals("Invalid credentials", (results[1] as Resource.Error).message)
     }
 
     @Test
@@ -70,7 +78,7 @@ class LoginUseCaseTest {
 
         // Assert
         assertTrue(results.isNotEmpty())
-        assertTrue(results[0] is Resource.Error)
-        assertEquals("No internet connection", (results[0] as Resource.Error).message)
+        assertTrue(results[1] is Resource.Error)
+        assertEquals("No internet connection", (results[1] as Resource.Error).message)
     }
 }

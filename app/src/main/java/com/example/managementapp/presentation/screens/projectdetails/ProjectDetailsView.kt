@@ -82,7 +82,7 @@ fun ProjectDetailsView(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
-                            painter = rememberImagePainter(it.owner.avatarUrl),
+                            painter = rememberImagePainter(it.owner?.avatarUrl),
                             contentDescription = "Owner Avatar",
                             modifier = Modifier
                                 .size(48.dp)
@@ -98,7 +98,7 @@ fun ProjectDetailsView(
                             )
 
                         Text(
-                            text = "Owner: ${it.owner.login}",
+                            text = "Owner: ${it.owner?.login}",
                             style = MaterialTheme.typography.body2,
                             modifier = Modifier.padding(start = 10.dp)
                         )
@@ -106,7 +106,7 @@ fun ProjectDetailsView(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    Text(text = it.name, style = MaterialTheme.typography.h5)
+                    it.name?.let { it1 -> Text(text = it1, style = MaterialTheme.typography.h5) }
 
                     Spacer(modifier = Modifier.height(8.dp))
 

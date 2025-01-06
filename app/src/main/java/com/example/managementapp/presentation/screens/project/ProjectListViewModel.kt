@@ -15,7 +15,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ProjectListViewModel @Inject constructor(
     private val getUserProjectsUseCase: GetUserProjectsUseCase,
-    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProjectListState())
@@ -27,39 +26,21 @@ class ProjectListViewModel @Inject constructor(
 
     fun loadProjects() {
         viewModelScope.launch {
-            _state.value = _state.value.copy(
-                isLoading = true,
-                error = null
-            )
+            getUserProjectsUseCase().collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> _state.value =
+                        _state.value.copy(isLoading = true, error = null)
 
-            val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            val token = sharedPreferences.getString("github_token", null)
+                    is Resource.Success -> _state.value = _state.value.copy(
+                        projects = resource.data,
+                        isLoading = false
+                    )
 
-            if (token != null) {
-                getUserProjectsUseCase(token).collect { resource ->
-                    when (resource) {
-                        is Resource.Loading -> { }
-
-                        is Resource.Success -> {
-                            _state.value = _state.value.copy(
-                                projects = resource.data ?: emptyList(),
-                                isLoading = false
-                            )
-                        }
-
-                        is Resource.Error -> {
-                            _state.value = _state.value.copy(
-                                error = resource.message,
-                                isLoading = false
-                            )
-                        }
-                    }
+                    is Resource.Error -> _state.value = _state.value.copy(
+                        error = resource.message,
+                        isLoading = false
+                    )
                 }
-            } else {
-                _state.value = _state.value.copy(
-                    error = "Token not found",
-                    isLoading = false
-                )
             }
         }
     }

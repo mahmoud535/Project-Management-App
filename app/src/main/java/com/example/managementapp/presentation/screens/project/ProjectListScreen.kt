@@ -13,11 +13,11 @@ fun ProjectListScreen(
     val state = viewModel.state.collectAsState().value
 
     ProjectListView(
-        projects = state.projects,
+        projects = state.projects ?: emptyList(),
         isLoading = state.isLoading,
         error = state.error,
         onProjectClick = { project ->
-            navController.navigate("project_details/${project.owner.login}/${project.name}")
+            navController.navigate("project_details/${project.owner?.login}/${project.name}")
         }
     )
 }

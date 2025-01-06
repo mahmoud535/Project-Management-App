@@ -1,4 +1,4 @@
-package com.example.managementapp.data.mapper.dto
+package com.example.managementapp.data.model.mapper.dto
 
 import com.example.managementapp.domain.model.User
 import com.google.gson.annotations.SerializedName

@@ -39,8 +39,8 @@ class GetProjectDetailsUseCaseTest {
         // Assert
         // Check if the results list has at least one element
         assertTrue(results.isNotEmpty())
-        assertTrue(results[0] is Resource.Success)
-        assertEquals(project, (results[0] as Resource.Success).data)
+        assertTrue(results[1] is Resource.Success)
+        assertEquals(project, (results[1] as Resource.Success).data)
     }
 
     @Test
@@ -55,8 +55,8 @@ class GetProjectDetailsUseCaseTest {
 
         // Assert
         assertTrue(results.isNotEmpty())
-        assertTrue(results[0] is Resource.Error)
-        assertEquals("Project not found", (results[0] as Resource.Error).message)
+        assertTrue(results[1] is Resource.Error)
+        assertEquals("Project not found", (results[1] as Resource.Error).message)
     }
 
     @Test
@@ -71,7 +71,7 @@ class GetProjectDetailsUseCaseTest {
 
         // Assert
         assertTrue(results.isNotEmpty())
-        assertTrue(results[0] is Resource.Error)
-        assertEquals("No internet connection", (results[0] as Resource.Error).message)
+        assertTrue(results[1] is Resource.Error)
+        assertEquals("No internet connection", (results[1] as Resource.Error).message)
     }
 }

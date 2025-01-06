@@ -1,7 +1,7 @@
 package com.example.managementapp.data.remote
 
-import com.example.managementapp.data.mapper.dto.ProjectDto
-import com.example.managementapp.data.mapper.dto.UserDto
+import com.example.managementapp.data.model.mapper.dto.ProjectDto
+import com.example.managementapp.data.model.mapper.dto.UserDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header

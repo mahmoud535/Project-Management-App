@@ -2,12 +2,15 @@ package com.example.managementapp.presentation.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.managementapp.data.local.PreferenceManager
 import com.example.managementapp.data.local.ProjectDatabase
 import com.example.managementapp.data.remote.GithubApi
 import com.example.managementapp.data.repository.GithubRepositoryImpl
 import com.example.managementapp.domain.repository.GithubRepository
 import com.example.managementapp.data.util.NetworkManager
 import com.example.managementapp.data.util.ResourceProvider
+import com.example.managementapp.domain.manager.HandleApiError
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,6 +55,14 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun bindPreferenceManager(
+        @ApplicationContext context: Context
+    ): PreferenceManager {
+        return PreferenceManager(context)
+    }
+
+    @Provides
+    @Singleton
     fun provideProjectDatabase(@ApplicationContext context: Context): ProjectDatabase {
         return Room.databaseBuilder(
             context,
@@ -66,8 +77,9 @@ object AppModule {
         api: GithubApi,
         db: ProjectDatabase,
         networkManager: NetworkManager,
-        resourceProvider: ResourceProvider
+        resourceProvider: ResourceProvider,
+        handleApiError: HandleApiError,
     ): GithubRepository {
-        return GithubRepositoryImpl(api, db, networkManager,resourceProvider)
+        return GithubRepositoryImpl(api, db,handleApiError, networkManager,resourceProvider)
     }
 }

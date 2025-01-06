@@ -2,13 +2,14 @@ package com.example.managementapp.data.repository
 
 import com.example.managementapp.R
 import com.example.managementapp.data.local.ProjectDatabase
-import com.example.managementapp.data.local.entity.ProjectEntity
-import com.example.managementapp.data.mapper.dto.ProjectDto
-import com.example.managementapp.data.mapper.dto.UserDto
+import com.example.managementapp.data.model.entity.ProjectEntity
+import com.example.managementapp.data.model.mapper.dto.ProjectDto
+import com.example.managementapp.data.model.mapper.dto.UserDto
 import com.example.managementapp.data.remote.GithubApi
 import com.example.managementapp.data.util.NetworkManager
 import com.example.managementapp.presentation.util.Resource
 import com.example.managementapp.data.util.ResourceProvider
+import com.example.managementapp.domain.manager.HandleApiError
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.toList
@@ -38,6 +39,7 @@ class GithubRepositoryImplTest {
     private lateinit var db: ProjectDatabase
     private lateinit var networkManager: NetworkManager
     private lateinit var resourceProvider: ResourceProvider
+    private lateinit var handleApiError: HandleApiError
 
     @Before
     fun setup() {
@@ -45,8 +47,9 @@ class GithubRepositoryImplTest {
         db = mockk()
         networkManager = mockk()
         resourceProvider = mockk()
+        handleApiError = mockk()
 
-        repository = GithubRepositoryImpl(api, db, networkManager, resourceProvider)
+        repository = GithubRepositoryImpl(api, db,handleApiError, networkManager, resourceProvider)
     }
 
     @Test
@@ -78,14 +81,14 @@ class GithubRepositoryImplTest {
             val errorResponse = Response.error<UserDto>(401, errorResponseBody)
             coEvery { networkManager.isNetworkConnected() } returns true
             coEvery { api.validateUser("token $token") } returns errorResponse
-            coEvery { resourceProvider.getString(R.string.invalid_credentials) } returns "Invalid credentials"
+            coEvery { resourceProvider.getString(R.string.user_not_found) } returns "User not found"
 
             // Act
             val results = repository.login(username, token).toList()
 
             // Assert
             assertTrue(results[1] is Resource.Error)
-            assertEquals("Invalid credentials", (results[1] as Resource.Error).message)
+            assertEquals("User not found", (results[1] as Resource.Error).message)
         }
 
     @Test
@@ -160,13 +163,13 @@ class GithubRepositoryImplTest {
 
         coEvery { networkManager.isNetworkConnected() } returns true
         coEvery { api.getProjectDetails(owner, repo) } returns errorResponse
-        coEvery { resourceProvider.getString(R.string.failed_to_fetch_project_details) } returns "Project not found"
+        coEvery { resourceProvider.getString(R.string.project_details_not_found) } returns "Project details not found"
 
         // Act
         val results = repository.getProjectDetails(owner, repo).toList()
 
         // Assert
         assertTrue(results[1] is Resource.Error)
-        assertEquals("Project not found", (results[1] as Resource.Error).message)
+        assertEquals("Project details not found", (results[1] as Resource.Error).message)
     }
 }

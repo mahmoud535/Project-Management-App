@@ -30,26 +30,20 @@ class ProjectDetailsViewModel @Inject constructor(
 
     fun loadProjectDetails(owner: String, repo: String) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(
-                isLoading = true,
-                error = null
-            )
+            _state.value = _state.value.copy(isLoading = true, error = null)
 
             getProjectDetailsUseCase(owner, repo).collect { resource ->
                 when (resource) {
-                    is Resource.Loading -> { }
-                    is Resource.Success -> {
-                        _state.value = _state.value.copy(
-                            project = resource.data,
-                            isLoading = false
-                        )
-                    }
-                    is Resource.Error -> {
-                        _state.value = _state.value.copy(
-                            error = resource.message,
-                            isLoading = false
-                        )
-                    }
+                    is Resource.Loading -> _state.value = _state.value.copy(isLoading = true)
+                    is Resource.Success -> _state.value = _state.value.copy(
+                        project = resource.data,
+                        isLoading = false
+                    )
+
+                    is Resource.Error -> _state.value = _state.value.copy(
+                        error = resource.message,
+                        isLoading = false
+                    )
                 }
             }
         }
