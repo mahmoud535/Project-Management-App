@@ -35,5 +35,5 @@
             android:theme="@style/Theme.ManagementApp">
         </activity>
     </application>
-    
+
 </manifest>
